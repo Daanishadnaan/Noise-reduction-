@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noise Cancellation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        p {
+            line-height: 1.6;
+        }
+        #noiseControl {
+            width: 100%;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Noise Cancellation</h1>
+        <p>Noise cancellation technology reduces unwanted ambient sounds using active noise control.</p>
+        
+        <h2>Example</h2>
+        <p>Use the slider to adjust the noise level:</p>
+        <input type="range" id="noiseControl" min="0" max="100" value="50">
+        <div id="noiseLevel">Noise Level: 50%</div>
+        
+        <input type="file" id="audioUpload" accept="audio/*">
+        <button id="playSound" disabled>Play Sound</button>
+        
+        <audio id="noise" loop></audio>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const noiseControl = document.getElementById('noiseControl');
+            const noiseLevel = document.getElementById('noiseLevel');
+            const noise = document.getElementById('noise');
+            const playSound = document.getElementById('playSound');
+            const audioUpload = document.getElementById('audioUpload');
+
+            noiseControl.addEventListener('input', () => {
+                const volume = noiseControl.value / 100;
+                noise.volume = volume;
+                noiseLevel.textContent = `Noise Level: ${noiseControl.value}%`;
+            });
+
+            playSound.addEventListener('click', () => {
+                if (noise.paused) {
+                    noise.play();
+                    playSound.textContent = 'Pause Sound';
+                } else {
+                    noise.pause();
+                    playSound.textContent = 'Play Sound';
+                }
+            });
+
+            audioUpload.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        noise.src = e.target.result;
+                        playSound.disabled = false;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
